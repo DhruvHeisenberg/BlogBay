@@ -24,7 +24,11 @@ const fs = require('fs');
 const salt = bcrypt.genSaltSync(10);
 const secret = process.env.SECRET;
 
-app.use(cors({credentials:true,origin:'http://localhost:3000'}));
+app.use(cors({
+    origin: ["https://share-sync-frontend.vercel.app"],
+    methods: ["POST", "GET", "PUT"],
+    credentials:true
+}))
 app.use(express.json());
 app.use(cookieParser());
 
