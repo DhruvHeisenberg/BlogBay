@@ -1,11 +1,12 @@
 import {Link, Navigate} from "react-router-dom";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect} from "react";
 import {UserContext} from "./UserContext";
 
+const serverUrl = "http://localhost:4000"
 export default function Header() {
   const {setUserInfo,userInfo} = useContext(UserContext);
   useEffect(() => {
-    fetch('http://localhost:4000/profile', {
+    fetch(`${serverUrl}/profile`, {
       credentials: 'include',
     }).then(response => {
       if (response.err)
@@ -19,7 +20,7 @@ export default function Header() {
   }, []);
 
   function logout() {
-    fetch('http://localhost:4000/logout', {
+    fetch(`${serverUrl}/logout`, {
       credentials: 'include',
       method: 'POST',
     });

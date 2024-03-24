@@ -7,24 +7,37 @@ const bcrypt = require('bcryptjs');
 const app = express();
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const crypto = require('crypto')
+const { uploadFile, deleteFile, getObjectSignedUrl } = require('./s3.js')
+
+
+
+// multer disk storage
 const multer = require('multer');
-const uploadMiddleware = multer({ dest: 'uploads/' });
+const storage = multer.memoryStorage()
+
+const upload = multer({ storage: storage })
+
+
 const fs = require('fs');
 
 const salt = bcrypt.genSaltSync(10);
-const secret = 'asdfe45we45w345wegw345werjktjwertkj';
+const secret = process.env.SECRET;
 
 app.use(cors({credentials:true,origin:'http://localhost:3000'}));
 app.use(express.json());
 app.use(cookieParser());
-app.use('/uploads', express.static(__dirname + '/uploads'));
 
 const PORT = process.env.PORT || 4000
 
-mongoose.connect('mongodb+srv://dhruvtripathi7777:IiR3XtD0AHCAQvJv@cluster0.pquvj31.mongodb.net/blogbay?retryWrites=true&w=majority')
+mongoose.connect(process.env.MONGO_URL)
 .then(()=>{
   console.log('Connected To MongoDB')
 })
+
+
+const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex')
+
 
 app.post('/register', async (req,res) => {
   const {username,password} = req.body;
@@ -46,6 +59,7 @@ app.post('/register', async (req,res) => {
 app.post('/login', async (req,res) => {
   const {username,password} = req.body;
   const userDoc = await User.findOne({username});
+
   if (userDoc==null)
   {
     return res.status(400).json('wrong credentials');
@@ -67,7 +81,7 @@ app.post('/login', async (req,res) => {
 
 app.get('/profile', (req,res) => {
   const {token} = req?.cookies;
-
+  
   if (!token)
   {
     return res.json("Token Invalid")
@@ -87,53 +101,63 @@ app.post('/logout', (req,res) => {
   res.cookie('token', '').json('ok');
 });
 
-app.post('/post', uploadMiddleware.single('file'), async (req,res) => {
-  const {originalname,path} = req.file;
-  const parts = originalname.split('.');
-  const ext = parts[parts.length - 1];
-  const newPath = path+'.'+ext;
-  fs.renameSync(path, newPath);
+app.post('/post', upload.single('file'), async (req,res) => {
+  let imageName = 'defaultImage.jpg';
+  if (req.file!==undefined)
+  {
+    imageName=generateFileName()
 
+    const fileVar = req.file;
+    await uploadFile(fileVar?.buffer, imageName, fileVar.mimetype)
+  }
   const {token} = req.cookies;
   jwt.verify(token, secret, {}, async (err,info) => {
     if (err) throw err;
     const {title,summary,content} = req.body;
+    const imageUrl = await getObjectSignedUrl(imageName);
+
     const postDoc = await Post.create({
       title,
       summary,
       content,
-      cover:newPath,
+      imageName,
       author:info.id,
+      imageUrl
     });
-    res.json(postDoc);
+    res.status(200).json(postDoc);
   });
-
 });
 
-app.put('/post',uploadMiddleware.single('file'), async (req,res) => {
-  let newPath = null;
-  if (req.file) {
-    const {originalname,path} = req.file;
-    const parts = originalname.split('.');
-    const ext = parts[parts.length - 1];
-    newPath = path+'.'+ext;
-    fs.renameSync(path, newPath);
-  }
-
+app.put('/post',upload.single('file'), async (req,res) => {
   const {token} = req.cookies;
   jwt.verify(token, secret, {}, async (err,info) => {
     if (err) throw err;
+
     const {id,title,summary,content} = req.body;
     const postDoc = await Post.findById(id);
     const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
     if (!isAuthor) {
       return res.status(400).json('you are not the author');
     }
-    await postDoc.update({
+
+    let imageName = 'defaultImage.jpg';
+    if (req.file!==undefined)
+    {
+      imageName=generateFileName()
+
+      const fileVar = req.file;
+      await uploadFile(fileVar?.buffer, imageName, fileVar.mimetype)
+    }
+
+    const imageUrl = await getObjectSignedUrl(imageName);
+//ssh -i "blogbay_key.pem" ubuntu@ec2-15-206-54-3.ap-south-1.compute.amazonaws.com
+    await Post.findOneAndUpdate({_id:id},
+      {
       title,
       summary,
       content,
-      cover: newPath ? newPath : postDoc.cover,
+      imageName,
+      imageUrl,
     });
 
     res.json(postDoc);
@@ -142,12 +166,30 @@ app.put('/post',uploadMiddleware.single('file'), async (req,res) => {
 });
 
 app.get('/post', async (req,res) => {
-  res.json(
-    await Post.find()
-      .populate('author', ['username'])
-      .sort({createdAt: -1})
-      .limit(20)
-  );
+
+  const posts =  await Post.find().populate('author', ['username']).sort({createdAt: -1}).limit(20)
+
+  // for (let post of posts)
+  // {
+  //   if (post.imageName===null)
+  //   continue;
+
+  //   const imageUrl = await getObjectSignedUrl(post.imageName);
+
+  //   if (post.imageUrl!=undefined)
+  //   {
+  //     continue;
+  //   }
+
+  //   await Post.findOneAndUpdate({_id:post._id},
+  //   {
+  //     imageUrl
+  //   })
+  // }
+
+  // console.log(posts)
+
+  res.send(posts)
 });
 
 app.get('/post/:id', async (req, res) => {

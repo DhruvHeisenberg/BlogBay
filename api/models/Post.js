@@ -5,7 +5,11 @@ const PostSchema = new Schema({
   title:String,
   summary:String,
   content:String,
-  cover:String,
+  imageUrl:String,
+  imageName:{
+    type:String,
+    required:true
+  },
   author:{type:Schema.Types.ObjectId, ref:'User'},
 }, {
   timestamps: true,
