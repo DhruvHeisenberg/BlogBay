@@ -60,6 +60,11 @@ app.post('/register', async (req,res) => {
   }
 });
 
+
+app.get('/',(req,res)=>{
+    res.json("Server Deployed");
+});
+
 app.post('/login', async (req,res) => {
   const {username,password} = req.body;
   const userDoc = await User.findOne({username});
