@@ -19,10 +19,19 @@ app.use(express.json());
 app.use(cookieParser());
 app.use('/uploads', express.static(__dirname + '/uploads'));
 
-mongoose.connect('mongodb+srv://blog:RD8paskYC8Ayj09u@cluster0.pflplid.mongodb.net/?retryWrites=true&w=majority');
+const PORT = process.env.PORT || 4000
+
+mongoose.connect('mongodb+srv://dhruvtripathi7777:IiR3XtD0AHCAQvJv@cluster0.pquvj31.mongodb.net/blogbay?retryWrites=true&w=majority')
+.then(()=>{
+  console.log('Connected To MongoDB')
+})
 
 app.post('/register', async (req,res) => {
   const {username,password} = req.body;
+  if (password=='')
+  {
+    return res.status(400).json({error:true});
+  }
   try{
     const userDoc = await User.create({
       username,
@@ -30,7 +39,6 @@ app.post('/register', async (req,res) => {
     });
     res.json(userDoc);
   } catch(e) {
-    console.log(e);
     res.status(400).json(e);
   }
 });
@@ -38,11 +46,15 @@ app.post('/register', async (req,res) => {
 app.post('/login', async (req,res) => {
   const {username,password} = req.body;
   const userDoc = await User.findOne({username});
+  if (userDoc==null)
+  {
+    return res.status(400).json('wrong credentials');
+  }
   const passOk = bcrypt.compareSync(password, userDoc.password);
   if (passOk) {
     // logged in
     jwt.sign({username,id:userDoc._id}, secret, {}, (err,token) => {
-      if (err) throw err;
+      if (err) return res.status(400).json({error:true});
       res.cookie('token', token).json({
         id:userDoc._id,
         username,
@@ -54,11 +66,21 @@ app.post('/login', async (req,res) => {
 });
 
 app.get('/profile', (req,res) => {
-  const {token} = req.cookies;
-  jwt.verify(token, secret, {}, (err,info) => {
-    if (err) throw err;
+  const {token} = req?.cookies;
+
+  if (!token)
+  {
+    return res.json("Token Invalid")
+  }
+  else
+  {
+    jwt.verify(token, secret, {}, (err,info) => {
+    if (err) {
+      return res.json({err:true})
+    }
     res.json(info);
   });
+  }
 });
 
 app.post('/logout', (req,res) => {
@@ -134,5 +156,6 @@ app.get('/post/:id', async (req, res) => {
   res.json(postDoc);
 })
 
-app.listen(4000);
-//
+app.listen(4000,()=>{
+  console.log(`Server Started at PORT ${PORT}`)
+});
