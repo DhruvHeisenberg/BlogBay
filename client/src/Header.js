@@ -2,7 +2,7 @@ import {Link, Navigate} from "react-router-dom";
 import {useContext, useEffect} from "react";
 import {UserContext} from "./UserContext";
 
-const serverUrl = "http://localhost:4000"
+const serverUrl = "https://blog-bay-backend.vercel.app"
 export default function Header() {
   const {setUserInfo,userInfo} = useContext(UserContext);
   useEffect(() => {

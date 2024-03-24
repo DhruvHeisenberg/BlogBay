@@ -4,7 +4,7 @@ import {formatISO9075} from "date-fns";
 import {UserContext} from "../UserContext";
 import {Link} from 'react-router-dom';
 
-const serverUrl = "http://localhost:4000"
+const serverUrl = "https://blog-bay-backend.vercel.app"
 
 export default function PostPage() {
   const [postInfo,setPostInfo] = useState(null);

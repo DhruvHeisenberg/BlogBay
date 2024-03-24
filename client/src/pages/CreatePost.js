@@ -2,7 +2,7 @@ import 'react-quill/dist/quill.snow.css';
 import {useState} from "react";
 import {Navigate} from "react-router-dom";
 import Editor from "../Editor";
-const serverUrl = "http://localhost:4000"
+const serverUrl = "https://blog-bay-backend.vercel.app"
 
 
 export default function CreatePost() {

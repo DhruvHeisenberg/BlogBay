@@ -3,7 +3,7 @@ import {Navigate, useParams} from "react-router-dom";
 import Editor from "../Editor";
 
 
-const serverUrl="http://localhost:4000"
+const serverUrl="https://blog-bay-backend.vercel.app"
 
 export default function EditPost() {
   const {id} = useParams();

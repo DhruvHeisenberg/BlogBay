@@ -2,7 +2,7 @@ import Post from "../Post";
 import {useEffect, useState} from "react";
 import axios from "axios"
 
-const serverUrl = "http://localhost:4000"
+const serverUrl = "https://blog-bay-backend.vercel.app"
 export default function IndexPage() {
   const [posts,setPosts] = useState([]);
   useEffect(() => {

@@ -1,4 +1,4 @@
-import express from 'express';
+const express = require('express');
 const cors = require('cors');
 const mongoose = require("mongoose");
 const User = require('./models/User.js');
@@ -8,6 +8,7 @@ const app = express();
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const crypto = require('crypto')
+const bodyParser = require('body-parser')
 const { uploadFile, deleteFile, getObjectSignedUrl } = require('./s3.js')
 
 
@@ -25,11 +26,14 @@ const salt = bcrypt.genSaltSync(10);
 const secret = process.env.SECRET;
 
 app.use(cors({
-    origin: ["http://localhost:3000"],
-    methods: ["POST", "GET", "PUT"],
+    origin: ["https://blog-bay-frontend.vercel.app"],
+    methods: ["POST", "GET", "PUT", "DELETE"],
     credentials:true
 }))
-app.use(express.json());
+
+
+app.use(bodyParser.json()); 
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const PORT = process.env.PORT || 4000
