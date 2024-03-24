@@ -62,7 +62,7 @@ app.post('/register', async (req,res) => {
 
 
 app.get('/',(req,res)=>{
-    res.json("Server Deployed");
+  return  res.json("Server Deployed");
 });
 
 app.post('/login', async (req,res) => {
