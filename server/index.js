@@ -11,7 +11,11 @@ const crypto = require('crypto')
 const bodyParser = require('body-parser')
 const { uploadFile, deleteFile, getObjectSignedUrl } = require('./s3.js')
 
-
+app.use(cors({
+    origin: ["*"],
+    methods: ["*"],
+    credentials:true
+}))
 
 // multer disk storage
 const multer = require('multer');
@@ -24,12 +28,6 @@ const fs = require('fs');
 
 const salt = bcrypt.genSaltSync(10);
 const secret = process.env.SECRET;
-
-app.use(cors({
-    origin: ["*"],
-    methods: ["*"],
-    credentials:true
-}))
 
 
 app.use(bodyParser.json()); 
