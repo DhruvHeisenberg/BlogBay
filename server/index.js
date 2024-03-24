@@ -26,8 +26,8 @@ const salt = bcrypt.genSaltSync(10);
 const secret = process.env.SECRET;
 
 app.use(cors({
-    origin: ["https://blog-bay-frontend.vercel.app"],
-    methods: ["POST", "GET", "PUT", "DELETE"],
+    origin: ["*"],
+    methods: ["*"],
     credentials:true
 }))
 
