@@ -1,8 +1,8 @@
-const express = require('express');
+import express from 'express';
 const cors = require('cors');
 const mongoose = require("mongoose");
-const User = require('./models/User');
-const Post = require('./models/Post');
+const User = require('./models/User.js');
+const Post = require('./models/Post.js');
 const bcrypt = require('bcryptjs');
 const app = express();
 const jwt = require('jsonwebtoken');
@@ -25,7 +25,7 @@ const salt = bcrypt.genSaltSync(10);
 const secret = process.env.SECRET;
 
 app.use(cors({
-    origin: ["https://share-sync-frontend.vercel.app"],
+    origin: ["http://localhost:3000"],
     methods: ["POST", "GET", "PUT"],
     credentials:true
 }))
