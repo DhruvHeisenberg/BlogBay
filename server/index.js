@@ -11,6 +11,7 @@ const crypto = require('crypto')
 const bodyParser = require('body-parser')
 const { uploadFile, deleteFile, getObjectSignedUrl } = require('./s3.js')
 const https = require('https');
+const fs = require('fs')
 
 
 const corsOpts = {
