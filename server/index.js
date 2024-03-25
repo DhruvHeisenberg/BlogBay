@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 const crypto = require('crypto')
 const bodyParser = require('body-parser')
 const { uploadFile, deleteFile, getObjectSignedUrl } = require('./s3.js')
+const https = require('https');
 
 
 const corsOpts = {
@@ -26,6 +27,11 @@ const corsOpts = {
 };
 
 app.use(cors(corsOpts));
+const options = {
+   key: fs.readFileSync('privkey.pem'),
+   cert: fs.readFileSync('cert.pem')
+ };
+
 
 // multer disk storage
 const multer = require('multer');
@@ -215,7 +221,8 @@ app.get('/post/:id', async (req, res) => {
   const postDoc = await Post.findById(id).populate('author', ['username']);
   res.json(postDoc);
 })
+const server = https.createServer(options,app);
 
-app.listen(PORT,()=>{
+server.listen(PORT,()=>{
   console.log(`Server Started at PORT ${PORT}`)
 });
