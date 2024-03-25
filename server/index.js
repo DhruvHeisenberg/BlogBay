@@ -14,7 +14,6 @@ const { uploadFile, deleteFile, getObjectSignedUrl } = require('./s3.js')
 app.use(cors({
     origin: ["*"],
     methods: ["*"],
-    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials:true
 }))
 
@@ -23,9 +22,6 @@ const multer = require('multer');
 const storage = multer.memoryStorage()
 
 const upload = multer({ storage: storage })
-
-
-const fs = require('fs');
 
 const salt = bcrypt.genSaltSync(10);
 const secret = process.env.SECRET;
