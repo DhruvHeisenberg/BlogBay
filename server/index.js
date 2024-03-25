@@ -92,12 +92,19 @@ app.post('/login', async (req,res) => {
   const passOk = bcrypt.compareSync(password, userDoc.password);
   if (passOk) {
     // logged in
+    //res.cookie('cookieName',randomNumber, { maxAge: 900000, httpOnly: true });
     jwt.sign({username,id:userDoc._id}, secret, {}, (err,token) => {
       if (err) return res.status(400).json({error:true});
-      res.cookie('token', token).json({
-        id:userDoc._id,
-        username,
-      });
+      res.cookie('token',token, { maxAge: 900000, httpOnly: true })
+      //.json({
+      //   id:userDoc._id,
+      //   username,
+      // });
+      res.send({
+            status: true,
+            message: "Login successful",
+            
+        });
     });
   } else {
     res.status(400).json('wrong credentials');
@@ -106,7 +113,7 @@ app.post('/login', async (req,res) => {
 
 app.get('/profile', (req,res) => {
   const {token} = req?.cookies;
-  
+  // console.log(token);
   if (!token)
   {
     return res.json("Token Invalid")
@@ -136,6 +143,8 @@ app.post('/post', upload.single('file'), async (req,res) => {
     await uploadFile(fileVar?.buffer, imageName, fileVar.mimetype)
   }
   const {token} = req.cookies;
+  // req.cookies.user_id
+  console.log(req.cookies)
   jwt.verify(token, secret, {}, async (err,info) => {
     if(err)
     {
