@@ -2,7 +2,7 @@ import Post from "../Post";
 import {useEffect, useState} from "react";
 import axios from "axios"
 
-const serverUrl = "http://15.206.54.3:8000"
+const serverUrl = "https://15.206.54.3:8000"
 export default function IndexPage() {
   const [posts,setPosts] = useState([]);
   useEffect(() => {

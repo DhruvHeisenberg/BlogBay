@@ -2,7 +2,7 @@ import {Link, Navigate} from "react-router-dom";
 import {useContext, useEffect} from "react";
 import {UserContext} from "./UserContext";
 
-const serverUrl = "http://15.206.54.3:8000"
+const serverUrl = "https://15.206.54.3:8000"
 
 export default function Header() {
   const {setUserInfo,userInfo} = useContext(UserContext);

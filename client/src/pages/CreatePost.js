@@ -2,7 +2,7 @@ import 'react-quill/dist/quill.snow.css';
 import {useState} from "react";
 import {Navigate} from "react-router-dom";
 import Editor from "../Editor";
-const serverUrl = "http://15.206.54.3:8000"
+const serverUrl = "https://15.206.54.3:8000"
 
 
 export default function CreatePost() {
