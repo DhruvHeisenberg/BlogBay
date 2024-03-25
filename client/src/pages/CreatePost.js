@@ -2,8 +2,9 @@ import 'react-quill/dist/quill.snow.css';
 import {useState} from "react";
 import {Navigate} from "react-router-dom";
 import Editor from "../Editor";
-const serverUrl = "https://15.206.54.3:8000"
+import Cookies from 'universal-cookie';
 
+const serverUrl = "https://15.206.54.3:8000"
 
 export default function CreatePost() {
   const [title,setTitle] = useState('');
@@ -11,12 +12,15 @@ export default function CreatePost() {
   const [content,setContent] = useState('');
   const [files, setFiles] = useState('');
   const [redirect, setRedirect] = useState(false);
+  const cookies = new Cookies();
+// cookies.set('token', userInfo.token, { path: '/' });
   async function createNewPost(ev) {
     const data = new FormData();
     data.set('title', title);
     data.set('summary', summary);
     data.set('content', content);
     data.set('file', files[0]);
+    data.set('token',cookies.get('token'))
     ev.preventDefault();
 
     const response = await fetch(`${serverUrl}/post`, {

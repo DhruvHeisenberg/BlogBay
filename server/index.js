@@ -95,7 +95,7 @@ app.post('/login', async (req,res) => {
     //res.cookie('cookieName',randomNumber, { maxAge: 900000, httpOnly: true });
     jwt.sign({username,id:userDoc._id}, secret, {}, (err,token) => {
       if (err) return res.status(400).json({error:true});
-      res.cookie('token',token, { maxAge: 900000, httpOnly: true })
+      // res.cookie('token',token, { maxAge: 900000, httpOnly: true })
       //.json({
       //   id:userDoc._id,
       //   username,
@@ -104,6 +104,7 @@ app.post('/login', async (req,res) => {
             status: true,
             message: "Login successful",
             id:userDoc._id,
+            token:token,
             username,
         });
     });
@@ -143,9 +144,7 @@ app.post('/post', upload.single('file'), async (req,res) => {
     const fileVar = req.file;
     await uploadFile(fileVar?.buffer, imageName, fileVar.mimetype)
   }
-  const {token} = req.cookies;
-  // req.cookies.user_id
-  console.log(req.cookies)
+  const token = req.body.token;
   jwt.verify(token, secret, {}, async (err,info) => {
     if(err)
     {
@@ -168,7 +167,7 @@ app.post('/post', upload.single('file'), async (req,res) => {
 });
 
 app.put('/post',upload.single('file'), async (req,res) => {
-  const {token} = req.cookies;
+  const token = req.body.token;
   jwt.verify(token, secret, {}, async (err,info) => {
     if(err)
     {

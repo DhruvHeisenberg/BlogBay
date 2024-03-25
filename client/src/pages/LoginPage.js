@@ -1,6 +1,7 @@
 import {useContext, useState, useEffect} from "react";
 import {Navigate} from "react-router-dom";
 import {UserContext} from "../UserContext"
+import Cookies from 'universal-cookie';
 
 
 const serverUrl = "https://15.206.54.3:8000"
@@ -12,9 +13,6 @@ export default function LoginPage() {
   const [redirect,setRedirect] = useState(false);
   const {setUserInfo} = useContext(UserContext);
 
-  useEffect(()=>{
-    
-  },[])
   async function login(ev) {
     ev.preventDefault();
     const response = await fetch(`${serverUrl}/login`, {
@@ -24,10 +22,14 @@ export default function LoginPage() {
       credentials: 'include',
     });
     if (response.ok) {
+
       response.json().then(userInfo => {
         setUserInfo(userInfo);
+        const cookies = new Cookies();
+        cookies.set('token', userInfo.token);
         setRedirect(true);
       });
+
     } else {
       alert('wrong credentials');
     }
