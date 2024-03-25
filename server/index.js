@@ -137,7 +137,11 @@ app.post('/post', upload.single('file'), async (req,res) => {
   }
   const {token} = req.cookies;
   jwt.verify(token, secret, {}, async (err,info) => {
-    if (err) throw err;
+    if(err)
+    {
+      console.log("Error of type: "+err+" Has occured");
+      return res.status(500).json({success:false,message:"Server Error has Occured "+err})
+    }
     const {title,summary,content} = req.body;
     const imageUrl = await getObjectSignedUrl(imageName);
 
@@ -156,8 +160,11 @@ app.post('/post', upload.single('file'), async (req,res) => {
 app.put('/post',upload.single('file'), async (req,res) => {
   const {token} = req.cookies;
   jwt.verify(token, secret, {}, async (err,info) => {
-    if (err) throw err;
-
+    if(err)
+    {
+      console.log("Error of type: "+err+" Has occured");
+      return res.status(500).json({success:false,message:"Server Error has Occured "+err})
+    }
     const {id,title,summary,content} = req.body;
     const postDoc = await Post.findById(id);
     const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
