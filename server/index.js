@@ -103,7 +103,8 @@ app.post('/login', async (req,res) => {
       res.send({
             status: true,
             message: "Login successful",
-            
+            id:userDoc._id,
+            username,
         });
     });
   } else {
