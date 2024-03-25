@@ -14,6 +14,7 @@ const { uploadFile, deleteFile, getObjectSignedUrl } = require('./s3.js')
 app.use(cors({
     origin: ["*"],
     methods: ["*"],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials:true
 }))
 
