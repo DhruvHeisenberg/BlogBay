@@ -210,6 +210,6 @@ app.get('/post/:id', async (req, res) => {
   res.json(postDoc);
 })
 
-app.listen(4000,()=>{
+app.listen(PORT,()=>{
   console.log(`Server Started at PORT ${PORT}`)
 });
