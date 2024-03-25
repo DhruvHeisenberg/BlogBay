@@ -11,11 +11,21 @@ const crypto = require('crypto')
 const bodyParser = require('body-parser')
 const { uploadFile, deleteFile, getObjectSignedUrl } = require('./s3.js')
 
-app.use(cors({
-    origin: ["*"],
-    methods: ["*"],
-    credentials:true
-}))
+
+const corsOpts = {
+  origin: ['http://localhost:3000','https://blog-bay-frontend.vercel.app','*'],
+
+  methods: [
+    'GET',
+    'POST',
+  ],
+  credentials:true,
+  allowedHeaders: [
+    'Content-Type',
+  ],
+};
+
+app.use(cors(corsOpts));
 
 // multer disk storage
 const multer = require('multer');

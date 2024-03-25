@@ -3,7 +3,7 @@ import {Navigate} from "react-router-dom";
 import {UserContext} from "../UserContext"
 
 
-const serverUrl = "https://blog-bay-backend.vercel.app"
+const serverUrl = "http://15.206.54.3:8000"
 
 export default function LoginPage() {
   

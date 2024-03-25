@@ -1,5 +1,5 @@
 import {useState} from "react";
-const serverUrl = "https://blog-bay-backend.vercel.app"
+const serverUrl = "http://15.206.54.3:8000"
 export default function RegisterPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
