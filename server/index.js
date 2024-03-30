@@ -9,10 +9,9 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const crypto = require('crypto')
 const bodyParser = require('body-parser')
-const { uploadFile, deleteFile, getObjectSignedUrl } = require('./s3.js')
+const { uploadFile, getObjectSignedUrl } = require('./s3.js')
 const https = require('https');
 const fs = require('fs')
-
 
 const corsOpts = {
   origin: ['http://localhost:3000','https://blog-bay-frontend.vercel.app','*'],
@@ -20,6 +19,7 @@ const corsOpts = {
   methods: [
     'GET',
     'POST',
+    'PUT',
   ],
   credentials:true,
   allowedHeaders: [
@@ -28,13 +28,15 @@ const corsOpts = {
 };
 
 app.use(cors(corsOpts));
+
 const options = {
    key: fs.readFileSync('privkey.pem'),
    cert: fs.readFileSync('cert.pem')
  };
 
 
-// multer disk storage
+
+// multer memory storage
 const multer = require('multer');
 const storage = multer.memoryStorage()
 
@@ -82,6 +84,8 @@ app.get('/',(req,res)=>{
 });
 
 app.post('/login', async (req,res) => {
+
+  // console.log()
   const {username,password} = req.body;
   const userDoc = await User.findOne({username});
 
@@ -95,11 +99,6 @@ app.post('/login', async (req,res) => {
     //res.cookie('cookieName',randomNumber, { maxAge: 900000, httpOnly: true });
     jwt.sign({username,id:userDoc._id}, secret, {}, (err,token) => {
       if (err) return res.status(400).json({error:true});
-      // res.cookie('token',token, { maxAge: 900000, httpOnly: true })
-      //.json({
-      //   id:userDoc._id,
-      //   username,
-      // });
       res.send({
             status: true,
             message: "Login successful",
@@ -108,13 +107,16 @@ app.post('/login', async (req,res) => {
             username,
         });
     });
-  } else {
+  } 
+  else {
     res.status(400).json('wrong credentials');
   }
 });
 
 app.get('/profile', (req,res) => {
   const {token} = req?.cookies;
+  // console.log('profile',token);
+  // console.log('Request',req.cookies)
   // console.log(token);
   if (!token)
   {
@@ -168,6 +170,7 @@ app.post('/post', upload.single('file'), async (req,res) => {
 
 app.put('/post',upload.single('file'), async (req,res) => {
   const token = req.body.token;
+  // console.log(token);
   jwt.verify(token, secret, {}, async (err,info) => {
     if(err)
     {
@@ -191,7 +194,6 @@ app.put('/post',upload.single('file'), async (req,res) => {
     }
 
     const imageUrl = await getObjectSignedUrl(imageName);
-//ssh -i "blogbay_key.pem" ubuntu@ec2-15-206-54-3.ap-south-1.compute.amazonaws.com
     await Post.findOneAndUpdate({_id:id},
       {
       title,
@@ -210,26 +212,6 @@ app.get('/post', async (req,res) => {
 
   const posts =  await Post.find().populate('author', ['username']).sort({createdAt: -1}).limit(20)
 
-  // for (let post of posts)
-  // {
-  //   if (post.imageName===null)
-  //   continue;
-
-  //   const imageUrl = await getObjectSignedUrl(post.imageName);
-
-  //   if (post.imageUrl!=undefined)
-  //   {
-  //     continue;
-  //   }
-
-  //   await Post.findOneAndUpdate({_id:post._id},
-  //   {
-  //     imageUrl
-  //   })
-  // }
-
-  // console.log(posts)
-
   res.send(posts)
 });
 
@@ -238,8 +220,16 @@ app.get('/post/:id', async (req, res) => {
   const postDoc = await Post.findById(id).populate('author', ['username']);
   res.json(postDoc);
 })
+
 const server = https.createServer(options,app);
+
+// app.listen(PORT,()=>{
+//   console.log(`Server Started at PORT ${PORT}`)
+// });
+
 
 server.listen(PORT,()=>{
   console.log(`Server Started at PORT ${PORT}`)
 });
+
+

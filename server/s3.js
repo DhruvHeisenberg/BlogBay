@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-const { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3")
+const { S3Client, PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3")
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner")
 
 
@@ -28,26 +28,10 @@ function uploadFile(fileBuffer, fileName, mimetype) {
   return s3Client.send(new PutObjectCommand(uploadParams));
 }
 
-function deleteFile(fileName) {
-  const deleteParams = {
-    Bucket: bucketName,
-    Key: fileName,
-  }
-  return s3Client.send(new DeleteObjectCommand(deleteParams));
-}
-
 async function getObjectSignedUrl(key) {
-  const params = {
-    Bucket: bucketName,
-    Key: key
-  }
-
-  // https://aws.amazon.com/blogs/developer/generate-presigned-url-modular-aws-sdk-javascript/
-  const command = new GetObjectCommand(params);
-  // const seconds = 3600
-  const url = await getSignedUrl(s3Client, command);
+  const url = `https://${bucketName}.s3.amazonaws.com/${key}`
 
   return url
 }
 
-module.exports = {uploadFile,deleteFile,getObjectSignedUrl}
+module.exports = {uploadFile,getObjectSignedUrl}

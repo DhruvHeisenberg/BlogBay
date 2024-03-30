@@ -5,6 +5,7 @@ import {UserContext} from "../UserContext";
 import {Link} from 'react-router-dom';
 
 const serverUrl = "https://15.206.54.3:8000"
+// const serverUrl = "http://localhost:8000"
 
 export default function PostPage() {
   const [postInfo,setPostInfo] = useState(null);

@@ -1,5 +1,7 @@
 import {useState} from "react";
 const serverUrl = "https://15.206.54.3:8000"
+// const serverUrl = "http://localhost:8000"
+
 export default function RegisterPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');

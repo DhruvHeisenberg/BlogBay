@@ -3,9 +3,12 @@ import {useContext, useEffect} from "react";
 import {UserContext} from "./UserContext";
 
 const serverUrl = "https://15.206.54.3:8000"
+// const serverUrl = "http://localhost:8000"
 
 export default function Header() {
   const {setUserInfo,userInfo} = useContext(UserContext);
+
+
   useEffect(() => {
     fetch(`${serverUrl}/profile`, {
       credentials: 'include',
@@ -19,6 +22,8 @@ export default function Header() {
       });
     });
   }, []);
+
+
 
   function logout() {
     fetch(`${serverUrl}/logout`, {
