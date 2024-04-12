@@ -2,7 +2,8 @@ import {Link, Navigate} from "react-router-dom";
 import {useContext, useEffect} from "react";
 import {UserContext} from "./UserContext";
 
-const serverUrl = "https://15.206.54.3:8000"
+// const serverUrl = "https://15.206.54.3:8000"
+const serverUrl = "https://dhruv.smartsavaari.in"
 // const serverUrl = "http://localhost:8000"
 
 export default function Header() {
