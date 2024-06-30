@@ -3,9 +3,7 @@ import {Navigate} from "react-router-dom";
 import {UserContext} from "../UserContext"
 import Cookies from 'universal-cookie';
 
-const serverUrl = "https://dhruv.smartsavaari.in"
-// const serverUrl = "https://15.206.54.3:8000"
-// const serverUrl = "http://localhost:8000"
+import {serverUrl} from "./config";
 
 export default function LoginPage() {
   
@@ -28,7 +26,6 @@ export default function LoginPage() {
         setUserInfo(userInfo);
         const cookies = new Cookies();
         cookies.set('token', userInfo.token);
-        cookies.set('xyz',"ajnfjdbjkasbjbdks");
         setRedirect(true);
       });
 

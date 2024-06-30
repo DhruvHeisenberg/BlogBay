@@ -115,9 +115,6 @@ app.post('/login', async (req,res) => {
 
 app.get('/profile', (req,res) => {
   const {token} = req?.cookies;
-  // console.log('profile',token);
-  // console.log('Request',req.cookies)
-  // console.log(token);
   if (!token)
   {
     return res.json("Token Invalid")
@@ -146,6 +143,7 @@ app.post('/post', upload.single('file'), async (req,res) => {
     const fileVar = req.file;
     await uploadFile(fileVar?.buffer, imageName, fileVar.mimetype)
   }
+  
   const token = req.body.token;
   jwt.verify(token, secret, {}, async (err,info) => {
     if(err)
@@ -155,7 +153,7 @@ app.post('/post', upload.single('file'), async (req,res) => {
     }
     const {title,summary,content} = req.body;
     const imageUrl = await getObjectSignedUrl(imageName);
-
+    
     const postDoc = await Post.create({
       title,
       summary,
@@ -205,7 +203,6 @@ app.put('/post',upload.single('file'), async (req,res) => {
 
     res.json(postDoc);
   });
-
 });
 
 app.get('/post', async (req,res) => {
@@ -227,9 +224,7 @@ const server = https.createServer(options,app);
 //   console.log(`Server Started at PORT ${PORT}`)
 // });
 
-
 server.listen(PORT,()=>{
   console.log(`Server Started at PORT ${PORT}`)
 });
-
 

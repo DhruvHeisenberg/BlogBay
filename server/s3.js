@@ -1,8 +1,6 @@
 require('dotenv').config()
 
-const { S3Client, PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3")
-const { getSignedUrl } = require("@aws-sdk/s3-request-presigner")
-
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3")
 
 const bucketName = process.env.AWS_BUCKET_NAME
 const region = process.env.AWS_BUCKET_REGION

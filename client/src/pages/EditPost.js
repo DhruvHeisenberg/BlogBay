@@ -3,10 +3,7 @@ import {Navigate, useParams} from "react-router-dom";
 import Editor from "../Editor";
 import Cookies from 'universal-cookie';
 
-
-const serverUrl = "https://dhruv.smartsavaari.in"
-// const serverUrl="https://15.206.54.3:8000"
-// const serverUrl = "http://localhost:8000"
+import {serverUrl} from "./config";
 
 export default function EditPost() {
   const {id} = useParams();
