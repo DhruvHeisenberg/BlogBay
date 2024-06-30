@@ -4,7 +4,9 @@ import {formatISO9075} from "date-fns";
 import {UserContext} from "../UserContext";
 import {Link} from 'react-router-dom';
 
-import {serverUrl} from "./config";
+import serverUrlFunction from "../config";
+
+const serverUrl = serverUrlFunction();
 
 export default function PostPage() {
   const [postInfo,setPostInfo] = useState(null);

@@ -1,6 +1,7 @@
 import {useState} from "react";
-import {serverUrl} from "./config";
+import serverUrlFunction from "../config";
 
+const serverUrl = serverUrlFunction();
 
 export default function RegisterPage() {
   const [username, setUsername] = useState('');

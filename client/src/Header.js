@@ -2,11 +2,12 @@ import {Link, Navigate} from "react-router-dom";
 import {useContext, useEffect} from "react";
 import {UserContext} from "./UserContext";
 
-import {serverUrl} from "./config";
+import serverUrlFunction from "./config";
+
+const serverUrl = serverUrlFunction();
 
 export default function Header() {
   const {setUserInfo,userInfo} = useContext(UserContext);
-
 
   useEffect(() => {
     fetch(`${serverUrl}/profile`, {

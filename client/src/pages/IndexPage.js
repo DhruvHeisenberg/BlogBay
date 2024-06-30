@@ -2,7 +2,9 @@ import Post from "../Post";
 import {useEffect, useState} from "react";
 import axios from "axios"
 
-import {serverUrl} from "./config";
+import serverUrlFunction from "../config";
+
+const serverUrl = serverUrlFunction();
 
 export default function IndexPage() {
   const [posts,setPosts] = useState([]);

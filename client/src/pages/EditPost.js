@@ -3,7 +3,9 @@ import {Navigate, useParams} from "react-router-dom";
 import Editor from "../Editor";
 import Cookies from 'universal-cookie';
 
-import {serverUrl} from "./config";
+import serverUrlFunction from "../config";
+
+const serverUrl = serverUrlFunction();
 
 export default function EditPost() {
   const {id} = useParams();

@@ -3,8 +3,9 @@ import {useState} from "react";
 import {Navigate} from "react-router-dom";
 import Editor from "../Editor";
 import Cookies from 'universal-cookie';
+import serverUrlFunction from "../config";
 
-import {serverUrl} from "./config";
+const serverUrl = serverUrlFunction();
 
 export default function CreatePost() {
   const [title,setTitle] = useState('');

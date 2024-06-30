@@ -1,3 +1,7 @@
-const serverUrl="https://api.blogbay.dhruvtripathi.tech";
+const serverUrlFunction=()=>{
+    const url="https://api.blogbay.dhruvtripathi.tech";
 
-export default serverUrl;
+    return url;
+}
+
+export default serverUrlFunction;

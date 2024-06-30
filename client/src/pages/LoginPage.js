@@ -3,7 +3,9 @@ import {Navigate} from "react-router-dom";
 import {UserContext} from "../UserContext"
 import Cookies from 'universal-cookie';
 
-import {serverUrl} from "./config";
+import serverUrlFunction from "../config";
+
+const serverUrl = serverUrlFunction();
 
 export default function LoginPage() {
   
